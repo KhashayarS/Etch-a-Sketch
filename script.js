@@ -1,6 +1,8 @@
 let defaultNumberOfSquares = 16;
 let container = document.querySelector(".container");
 
+let globalOpacityCounter = 1;
+
 
 function clearBoard() {
     container.innerHTML = "";
@@ -24,6 +26,13 @@ function generateRandomColor() {
 }
 
 
+function generateDarkeningColor(opacity=0) {
+    let newColor = `rgba(128, 128, 128, ${opacity})`;
+    console.log(newColor);
+    
+    return newColor
+}
+
 function generateGrid(numberOfSquares) {
 
     fixItemsStyle(numberOfSquares);
@@ -38,24 +47,34 @@ function generateGrid(numberOfSquares) {
 }
 
 
-function activateItem(item, randomColors = true) {
-
+function activateItem(item, randomColors=false, darkeningColors=false) {
+    
     if (randomColors) {
         item.style.backgroundColor = generateRandomColor();
-    } else {
+    } else if (darkeningColors) {
+        if (globalOpacityCounter < 10) {
+            let opacityValue = (1 - globalOpacityCounter / 10);
+            console.log(opacityValue);
+            item.style.backgroundColor = generateDarkeningColor(opacityValue);
+            globalOpacityCounter++;
+        } else {
+            item.style.backgroundColor = generateDarkeningColor(opacity=0);
+        }
+    }else {
+        item.style.backgroundColor = null;
         item.classList.add('active');
     }
 }
 
 
-function activateGrids() {
+function activateGrids(randomColors=false, darkeningColors=false) {
 
     let gridItems = document.querySelectorAll('.gridItem');
     
     container.addEventListener('mouseover', (event) => {
         let target = event.target;
         if (target.classList.contains('gridItem')) {
-            activateItem(event.target);
+            activateItem(event.target, randomColors, darkeningColors);
         }
     })
     
@@ -90,7 +109,27 @@ function createCustomGrid() {
 }
 
 
+function createNormalGrid() {
+    resetGrid();
+    activateGrids(randomColor=false, darkeningColor=false);
+}
+
+function createRandomGrid() {
+    resetGrid();
+    activateGrids(randomColor=true, darkeningColor=false);
+}
+
+
+function createProgressiveDarkeningGrid() {
+    globalOpacityCounter = 0;
+    resetGrid();
+    activateGrids(randomColor=false, darkeningColor=true);
+
+}
+
+
 function resetGrid() {
+    globalOpacityCounter = 0;
     clearBoard();
     generateGrid(defaultNumberOfSquares);
 }
@@ -98,8 +137,9 @@ function resetGrid() {
 
 function startGame() {
     generateGrid(defaultNumberOfSquares);
-    activateGrids();
+    createNormalGrid();
 }
+
 
 
 startGame();
