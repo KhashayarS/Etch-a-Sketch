@@ -18,17 +18,22 @@ body {
     height: 100vh;
 }
 
+.main {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
 .container {
-    border: 2px solid hotpink;
+    border: 5px solid #ff0080;
     display: flex;
     flex-wrap: wrap;
     width: 800px;
     height: 800px;
-    margin: 0 auto;
 }
 
 .gridItem {
-    border: 1px solid blue;
     width: calc( ( 1 / var(--squaresPerSide) ) * 100% );
     height: calc( ( 1 / var(--squaresPerSide) ) * 100% );
     background-color: #ccc;
@@ -37,6 +42,15 @@ body {
 
 .active {
     background-color: black;
+}
+
+.buttonsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+    margin: 0 2rem;
 }
 
 
@@ -70,4 +84,9 @@ body {
   filter: saturate(0.2) opacity(0.5);
   -webkit-filter: saturate(0.2) opacity(0.5);
   cursor: not-allowed;
+}
+
+/*Custom btn-1 styles*/
+.btn-1 {
+    margin: 0.5rem 0;
 }

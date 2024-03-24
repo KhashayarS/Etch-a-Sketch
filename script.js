@@ -28,10 +28,10 @@ function generateRandomColor() {
 
 function generateDarkeningColor(opacity=0) {
     let newColor = `rgba(128, 128, 128, ${opacity})`;
-    console.log(newColor);
     
     return newColor
 }
+
 
 function generateGrid(numberOfSquares) {
 
@@ -54,7 +54,6 @@ function activateItem(item, randomColors=false, darkeningColors=false) {
     } else if (darkeningColors) {
         if (globalOpacityCounter < 10) {
             let opacityValue = (1 - globalOpacityCounter / 10);
-            console.log(opacityValue);
             item.style.backgroundColor = generateDarkeningColor(opacityValue);
             globalOpacityCounter++;
         } else {
@@ -93,16 +92,16 @@ function createCustomGrid() {
         numOfSquares = prompt("Please enter the number of sqaures per side!\nNumber should between 2 and 100"); 
         
         if (numOfSquares === null) {
-            console.log(defaultNumberOfSquares);
             resetGrid();
             break;
+        } else {
+            numOfSquares = Number(numOfSquares); 
         }
-
-        numOfSquares = Number(numOfSquares); 
-        defaultNumberOfSquares = numOfSquares;
     }
+
     
     if (!(numOfSquares === null)) {
+        defaultNumberOfSquares = numOfSquares;
         clearBoard();
         generateGrid(numOfSquares);
     }
