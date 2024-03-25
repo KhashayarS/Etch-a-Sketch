@@ -31,12 +31,12 @@ body {
     flex-wrap: wrap;
     width: 800px;
     height: 800px;
+    background-color: #ccc;
 }
 
 .gridItem {
     width: calc( ( 1 / var(--squaresPerSide) ) * 100% );
     height: calc( ( 1 / var(--squaresPerSide) ) * 100% );
-    background-color: #ccc;
     box-sizing: border-box;
 }
 

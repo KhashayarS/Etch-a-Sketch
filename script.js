@@ -1,7 +1,13 @@
-let defaultNumberOfSquares = 16;
+let currentNumberOfSquares = 16;
 let container = document.querySelector(".container");
 
 let globalOpacityCounter = 1;
+
+
+function fixItemsStyle(squareSize) {
+    let r = document.querySelector(":root");
+    r.style.setProperty('--squaresPerSide', squareSize);
+}
 
 
 function clearBoard() {
@@ -9,9 +15,10 @@ function clearBoard() {
 }
 
 
-function fixItemsStyle(squareSize) {
-    let r = document.querySelector(":root");
-    r.style.setProperty('--squaresPerSide', squareSize);
+function resetGrid() {
+    globalOpacityCounter = 1;
+    clearBoard();
+    generateGrid(currentNumberOfSquares);
 }
 
 
@@ -27,7 +34,7 @@ function generateRandomColor() {
 
 
 function generateDarkeningColor(opacity=0) {
-    let newColor = `rgba(128, 128, 128, ${opacity})`;
+    let newColor = `rgba(0, 0, 0, ${opacity})`;
     
     return newColor
 }
@@ -50,32 +57,56 @@ function generateGrid(numberOfSquares) {
 function activateItem(item, randomColors=false, darkeningColors=false) {
     
     if (randomColors) {
+
         item.style.backgroundColor = generateRandomColor();
+
     } else if (darkeningColors) {
+
         if (globalOpacityCounter < 10) {
-            let opacityValue = (1 - globalOpacityCounter / 10);
+            let opacityValue = globalOpacityCounter / 10;
             item.style.backgroundColor = generateDarkeningColor(opacityValue);
             globalOpacityCounter++;
         } else {
-            item.style.backgroundColor = generateDarkeningColor(opacity=0);
+            item.style.backgroundColor = generateDarkeningColor(opacity=1);
         }
-    }else {
+
+    } else {
+
         item.style.backgroundColor = null;
         item.classList.add('active');
+
+    }
+}
+
+
+function removeContainerHandlers() {
+    
+    // Clone recursively
+    let clonedContainer = container.cloneNode(true);
+
+    try {
+        container.parentNode.replaceChild(clonedContainer, container);
+        container = clonedContainer;
+    }
+    catch (e) {}
+}
+
+
+function activateGridsHandler(randomColors, darkeningColors) {
+
+    return function(event) {
+        let target = event.target;
+        if (target.classList.contains('gridItem')) {
+            activateItem(target, randomColors, darkeningColors);
+        }
     }
 }
 
 
 function activateGrids(randomColors=false, darkeningColors=false) {
-
-    let gridItems = document.querySelectorAll('.gridItem');
-    
-    container.addEventListener('mouseover', (event) => {
-        let target = event.target;
-        if (target.classList.contains('gridItem')) {
-            activateItem(event.target, randomColors, darkeningColors);
-        }
-    })
+    // Remove previous handlers so that they won't trigger mulitple times
+    removeContainerHandlers();
+    container.addEventListener('mouseover', activateGridsHandler(randomColors, darkeningColors));
     
 }
 
@@ -101,7 +132,7 @@ function createCustomGrid() {
 
     
     if (!(numOfSquares === null)) {
-        defaultNumberOfSquares = numOfSquares;
+        currentNumberOfSquares = numOfSquares;
         clearBoard();
         generateGrid(numOfSquares);
     }
@@ -120,6 +151,7 @@ function createRandomGrid() {
 
 
 function createProgressiveDarkeningGrid() {
+
     globalOpacityCounter = 0;
     resetGrid();
     activateGrids(randomColor=false, darkeningColor=true);
@@ -127,18 +159,10 @@ function createProgressiveDarkeningGrid() {
 }
 
 
-function resetGrid() {
-    globalOpacityCounter = 0;
-    clearBoard();
-    generateGrid(defaultNumberOfSquares);
-}
-
-
 function startGame() {
-    generateGrid(defaultNumberOfSquares);
+    generateGrid(currentNumberOfSquares);
     createNormalGrid();
 }
-
 
 
 startGame();
